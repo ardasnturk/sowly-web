@@ -1,0 +1,203 @@
+@import "tailwindcss";
+@import "@fontsource-variable/nunito/wght.css";
+
+/* Brand colours match the app. Rounded system font first, so Safari on Apple devices gets
+   SF Pro Rounded like the app; other browsers get Nunito, which is bundled with the site
+   (self-hosted, no requests to a font service). */
+@theme {
+  --font-sans: ui-rounded, "Nunito Variable", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Apple SD Gothic Neo", "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  --color-brand: #2e9e62;
+  --color-brand-deep: #1f7f52;
+  --color-brand-soft: #7fd3a2;
+  --color-lime: #cdeba9;
+  --color-mint: #dcefdc;
+  --color-paper: #f3f6ef;
+  --color-ink: #16211b;
+  --color-sun: #f5c73d;
+  --color-orange: #f08a34;
+  --color-sky: #3b8fe0;
+  --color-night: #0e1512;
+  --color-night-card: #17221c;
+  --radius-card: 28px;
+  --shadow-soft: 0 18px 50px -24px rgb(22 33 27 / 0.28), 0 2px 6px -2px rgb(22 33 27 / 0.06);
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+body {
+  @apply bg-paper text-ink antialiased dark:bg-night dark:text-[#eef4ee];
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+:focus-visible {
+  @apply rounded-lg outline-2 outline-offset-2 outline-brand-deep dark:outline-brand-soft;
+}
+
+/* Long German, Dutch and Russian words in headlines. */
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+}
+
+.card {
+  @apply rounded-card bg-white shadow-soft dark:bg-night-card dark:shadow-none dark:ring-1 dark:ring-white/8;
+}
+.muted {
+  @apply text-ink/70 dark:text-white/65;
+}
+.accent {
+  @apply text-brand-deep dark:text-brand-soft;
+}
+
+/* ---------- Reveal on scroll ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity 0.8s var(--ease-out-soft),
+    transform 0.8s var(--ease-out-soft);
+  transition-delay: var(--delay, 0ms);
+}
+.reveal[data-variant="scale"] {
+  transform: scale(0.94);
+}
+.reveal[data-variant="left"] {
+  transform: translate3d(-32px, 0, 0);
+}
+.reveal[data-variant="right"] {
+  transform: translate3d(32px, 0, 0);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Parallax ---------- */
+
+.parallax-slow {
+  transform: translate3d(0, calc(var(--parallax, 0) * 28px), 0);
+}
+.parallax-fast {
+  transform: translate3d(0, calc(var(--parallax, 0) * -56px), 0);
+}
+
+/* ---------- Ambient motion ---------- */
+
+/* Produce circles drift on a small loop; --dx/--dy/--rot vary per item. */
+@keyframes drift {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  33% {
+    translate: var(--dx, 6px) calc(var(--dy, 12px) * -1);
+    rotate: var(--rot, 4deg);
+  }
+  66% {
+    translate: calc(var(--dx, 6px) * -1) calc(var(--dy, 12px) * -0.4);
+    rotate: calc(var(--rot, 4deg) * -1);
+  }
+}
+.animate-drift {
+  animation: drift var(--duration, 9s) ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  to {
+    rotate: 360deg;
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 60s linear infinite;
+}
+
+/* Scroll progress bar under the header. */
+.scroll-progress {
+  transform-origin: left;
+  transform: scaleX(var(--scroll, 0));
+}
+
+/* Hero entrance (one-shot). */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-in {
+  animation: hero-in 0.9s var(--ease-out-soft) both;
+}
+
+/* FAQ disclosure. */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-chevron {
+  rotate: 180deg;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .reveal,
+  .reveal[data-variant] {
+    opacity: 1;
+    transform: none;
+  }
+  .parallax-slow,
+  .parallax-fast {
+    transform: none;
+  }
+  .animate-drift,
+  .animate-float,
+  .animate-spin-slow {
+    animation: none;
+  }
+}
