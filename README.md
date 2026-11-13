@@ -28,7 +28,7 @@ entry (`index.html`, `privacy/index.html`, `terms/index.html`, `support/index.ht
 ```
 index.html, privacy/, terms/, support/   HTML entries (title, description, Open Graph, hreflang)
 public/CNAME                             custom domain for GitHub Pages
-public/assets/                           icon.png (favicon, logo), og.png (1200 × 630 share image)
+public/assets/                           icon.png (favicon, logo), og.png (1200 × 630 share image, drawn by `python3 -I tools/make_og.py`)
 public/screens/<language>/               app screenshots, 780 px wide WebP, unframed
 public/crops/                            produce photos, 320 px WebP
 src/config.ts                            App Store URL, support e-mail, screenshot helpers
